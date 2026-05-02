@@ -1,0 +1,11 @@
+.codex-before.txt
+.codex-after.txt
+.debug-codex-exec.log
+.self-improve-*.log
+.self-improve-*.err.log
+.self-improve-*.out
+.self-improve-*.json
+.self-improve-model-last.txt
+.tmp-*
+scripts/__pycache__/
+*.pyc

@@ -1,4 +1,4 @@
 interface:
   display_name: "Self Improve"
   short_description: "Runs autonomous, test-gated code improvement loops."
-  default_prompt: "Use $self-improve to autonomously improve this repository in short, test-gated iterations."
+  default_prompt: "Use $self-improve to run unattended, test-gated improvements on this repository for 5 iterations and return checkpoint evidence."
