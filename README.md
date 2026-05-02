@@ -1,5 +1,7 @@
 # self-improve
 
+[中文说明](./README.zh-CN.md)
+
 `self-improve` is a Codex skill for running bounded, test-gated repository improvement loops.
 
 It is designed to solve a common pain point in autonomous coding workflows: a model may be able to spot useful fixes, but without explicit guardrails it can drift, over-edit, skip validation, or make progress that is hard to inspect afterward.
@@ -40,7 +42,8 @@ Installed skill name:
 
 - [`SKILL.md`](./SKILL.md): main skill definition and operating contract
 - [`agents/openai.yaml`](./agents/openai.yaml): agent-facing metadata
-- [`references/improvement-rubric.md`](./references/improvement-rubric.md): candidate selection rubric
+- [`references/`](./references): operating references for scoring, validation order, checkpointing, rollback, and loop control
+- [`scripts/`](./scripts): helper scripts for logging, checkpoint generation, candidate ranking, validation, and unattended loop execution
 
 ## Typical Use Case
 
