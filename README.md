@@ -24,6 +24,18 @@ In other words, the loop is:
 
 `baseline -> select target -> patch -> validate -> log -> continue or stop`
 
+## Install
+
+Install this skill into Codex from the repository root:
+
+1. In Codex, ask it to install the skill from GitHub:
+   `Use skill-installer to install this skill from GitHub: https://github.com/Zh1rV/self-improve.git`
+2. Restart Codex after installation so the new skill is loaded.
+
+Installed skill name:
+
+- `self-improve`
+
 ## Repository Contents
 
 - [`SKILL.md`](./SKILL.md): main skill definition and operating contract
