@@ -1,0 +1,35 @@
+# self-improve
+
+`self-improve` is a Codex skill for running bounded, test-gated repository improvement loops.
+
+It is designed to solve a common pain point in autonomous coding workflows: a model may be able to spot useful fixes, but without explicit guardrails it can drift, over-edit, skip validation, or make progress that is hard to inspect afterward.
+
+This skill keeps the workflow simple and controlled:
+
+1. Establish a baseline and identify candidate improvements.
+2. Score and select a high-value, low-risk target.
+3. Apply the smallest safe change.
+4. Validate the result before continuing.
+5. Repeat in short iterations until the budget is exhausted or no safe target remains.
+
+## Core Logic Flow
+
+The current version is built around a single-agent iterative loop rather than a multi-agent system.
+
+- It favors short, repeated reasoning cycles instead of one very long chain-of-thought pass.
+- Each round is expected to produce a bounded change with explicit validation evidence.
+- The skill emphasizes observability and control over raw autonomy.
+
+In other words, the loop is:
+
+`baseline -> select target -> patch -> validate -> log -> continue or stop`
+
+## Repository Contents
+
+- [`SKILL.md`](./SKILL.md): main skill definition and operating contract
+- [`agents/openai.yaml`](./agents/openai.yaml): agent-facing metadata
+- [`references/improvement-rubric.md`](./references/improvement-rubric.md): candidate selection rubric
+
+## Typical Use Case
+
+Use this skill when you want Codex to improve a codebase continuously, but only through small, reviewable, test-backed iterations.
