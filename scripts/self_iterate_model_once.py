@@ -18,6 +18,7 @@ SKILLS_ROOT = SKILL_ROOT.parent
 QUICK_VALIDATE = (
     SKILLS_ROOT / ".system" / "skill-creator" / "scripts" / "quick_validate.py"
 )
+SELF_TEST = SCRIPT_DIR / "self_test.py"
 
 
 def utc_now() -> str:
@@ -130,11 +131,12 @@ def build_prompt() -> str:
         "1) Find one real bug in the self-improve skill scripts/docs.\n"
         "2) Apply the smallest safe fix.\n"
         f"3) Run validation: python {QUICK_VALIDATE} {SKILL_ROOT}\n"
-        "4) If no real bug is found, make no file changes and report no_change.\n"
+        f"4) Run regression checks: python {SELF_TEST}\n"
+        "5) If no real bug is found, make no file changes and report no_change.\n"
         "Final response format (plain text, exactly 3 lines):\n"
         "bug: <one sentence>\n"
         "files: <comma separated absolute paths or none>\n"
-        "validation: <pass/fail + key output>\n"
+        "validation: <pass/fail + key output, including self_test result>\n"
     )
 
 
@@ -319,6 +321,9 @@ def main() -> int:
     validation = fields["validation"].strip().lower()
     if not validation.startswith("pass"):
         print(f"result=iteration_failed detail=validation_not_pass:{fields['validation']}")
+        return 1
+    if "self_test" not in validation:
+        print("result=runner_error error=missing_self_test_validation")
         return 1
 
     summary = fields["bug"] or summarize_output(message)

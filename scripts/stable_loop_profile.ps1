@@ -49,6 +49,8 @@ if (-not $Start) {
     }
     $startPreview = "python `"$runLoop`" --cwd `"$skillRoot`" --command '$innerPreview' --batch-size 20 --max-batches 0 --max-consecutive-failures 8 --retry-delay-seconds 30 --sleep-seconds 2 --state-file $stateFile --log-file $logFile --print-progress"
     Write-Output $startPreview
+    Write-Output "Fast self-test:"
+    Write-Output "python `"$((Join-Path $scriptDir "self_test.py"))`""
     Write-Output "Watch log:"
     Write-Output "Get-Content `"$((Join-Path $skillRoot $logFile))`" -Wait -Tail 50"
     exit 0

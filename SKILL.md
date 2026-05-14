@@ -146,6 +146,15 @@ For one-round autonomous bug-hunt and self-heal, use `scripts/self_iterate_once.
 For a conservative long-run preset, use `scripts/stable_loop_profile.ps1`.
 See `references/loop-mode.md` for start, stop, state, and log usage.
 
+## Fast Self Test
+
+Before and after changing this skill, run:
+
+`python scripts/self_test.py`
+
+This covers skill metadata validation, Python compilation, helper CLI behavior,
+loop stop reasons, and the self-heal validation contract.
+
 ## Quick Start Prompt
 
 Use `$self-improve` to autonomously improve this repository in bounded, test-gated iterations and return a final change summary with evidence.

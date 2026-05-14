@@ -67,6 +67,21 @@ def detect_dialect(sample: str) -> csv.Dialect:
         return csv.get_dialect("excel")
 
 
+def normalize_headers(raw_headers: list[str | None]) -> list[str]:
+    headers = [h.strip().lower() for h in raw_headers if h is not None]
+    seen: set[str] = set()
+    duplicates: set[str] = set()
+    for header in headers:
+        if not header:
+            continue
+        if header in seen:
+            duplicates.add(header)
+        seen.add(header)
+    if duplicates:
+        raise SystemExit(f"duplicate columns: {', '.join(sorted(duplicates))}")
+    return headers
+
+
 def normalize_row(row: dict[str, str | None]) -> dict[str, str]:
     normalized: dict[str, str] = {}
     for key, value in row.items():
@@ -114,7 +129,7 @@ def main() -> int:
             reader = csv.DictReader(f, dialect=dialect)
 
             raw_headers = reader.fieldnames or []
-            headers = [h.strip().lower() for h in raw_headers if h is not None]
+            headers = normalize_headers(raw_headers)
             missing = [h for h in REQUIRED if h not in headers]
             if missing:
                 raise SystemExit(f"missing required columns: {', '.join(missing)}")

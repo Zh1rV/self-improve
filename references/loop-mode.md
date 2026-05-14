@@ -11,7 +11,8 @@ Example (PowerShell):
 Notes:
 
 - `--max-batches 0` means unlimited batches.
-- The loop stops on stop-file, signal, max batch limit, or max consecutive failures.
+- The loop stops on stop-file, signal, max batch limit, command timeout, or max consecutive failures.
+- If the stop file already exists at startup, the loop records `initial_stop_file_present` and exits without running an iteration.
 - `--command-timeout-seconds <N>` sets a hard timeout per iteration command. `0` disables it.
 
 Self-iteration mode (bug-hunt + self-heal each round):

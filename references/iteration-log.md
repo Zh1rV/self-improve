@@ -18,3 +18,4 @@ Field expectations:
 Optional helper:
 
 - Use `scripts/append_iteration_log.py` to append a sanitized row.
+- Add `--with-header` when creating a new log that should include the schema row.

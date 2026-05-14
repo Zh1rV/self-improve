@@ -25,6 +25,7 @@ SCORE_SCRIPT = SCRIPT_DIR / "score_candidates.py"
 RANK_SCRIPT = SCRIPT_DIR / "rank_candidates.py"
 APPEND_SCRIPT = SCRIPT_DIR / "append_iteration_log.py"
 VALIDATE_STOP_SCRIPT = SCRIPT_DIR / "validate_stop_reason.py"
+SELF_TEST_SCRIPT = SCRIPT_DIR / "self_test.py"
 
 
 @dataclass
@@ -161,6 +162,17 @@ def run_quick_validate() -> Result:
     return run_cmd([str(PYTHON), str(QUICK_VALIDATE), str(SKILL_ROOT)])
 
 
+def run_self_test() -> Result:
+    return run_cmd([str(PYTHON), str(SELF_TEST_SCRIPT)], cwd=SKILL_ROOT)
+
+
+def run_validation_suite() -> Result:
+    quick = run_quick_validate()
+    if quick.code != 0:
+        return quick
+    return run_self_test()
+
+
 def restore_baseline(file_name: str) -> None:
     baseline = BASELINE_DIR / file_name
     target = SCRIPT_DIR / file_name
@@ -195,7 +207,7 @@ def main() -> int:
         print_diag("before", d)
 
     if not failed:
-        validate = run_quick_validate()
+        validate = run_validation_suite()
         if validate.code != 0:
             print("status=validate_failed")
             print(validate.stdout or validate.stderr)
@@ -209,7 +221,7 @@ def main() -> int:
         restore_baseline(file_name)
         print(f"action=restored file={file_name}")
 
-    validate = run_quick_validate()
+    validate = run_validation_suite()
     if validate.code != 0:
         print("status=restore_validate_failed")
         print(validate.stdout or validate.stderr)

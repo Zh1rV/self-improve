@@ -7,6 +7,7 @@ import argparse
 from pathlib import Path
 
 ALLOWED_RISKS = {"low", "medium", "high"}
+HEADER = "iteration|target|score|commands|result|risk|note"
 
 
 def parse_args() -> argparse.Namespace:
@@ -19,6 +20,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--result", required=True, help="Result, e.g. pass/fail")
     parser.add_argument("--risk", required=True, help="Risk level, e.g. low/medium/high")
     parser.add_argument("--note", default="", help="Optional short note")
+    parser.add_argument(
+        "--with-header",
+        action="store_true",
+        help="Write the schema header when creating an empty log file",
+    )
     return parser.parse_args()
 
 
@@ -76,6 +82,9 @@ def main() -> int:
     except OSError as exc:
         raise SystemExit(f"failed to create parent directory: {exc}")
     needs_newline = False
+    needs_header = args.with_header and (
+        not log_path.exists() or log_path.stat().st_size == 0
+    )
     try:
         if log_path.exists() and log_path.stat().st_size > 0:
             with log_path.open("rb") as check:
@@ -84,6 +93,9 @@ def main() -> int:
             needs_newline = last_byte not in (b"\n", b"\r")
 
         with log_path.open("a", encoding="utf-8", newline="") as f:
+            if needs_header:
+                f.write(HEADER)
+                f.write("\n")
             if needs_newline:
                 f.write("\n")
             f.write(row)

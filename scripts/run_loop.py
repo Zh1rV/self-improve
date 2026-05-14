@@ -186,6 +186,7 @@ def main() -> int:
     log_file = resolve_path(cwd, args.log_file)
     if stop_file.exists() and stop_file.is_dir():
         raise SystemExit(f"--stop-file must be a file path, got directory: {stop_file}")
+    initial_stop_file_present = stop_file.exists()
 
     signal.signal(signal.SIGINT, on_signal)
     signal.signal(signal.SIGTERM, on_signal)
@@ -231,7 +232,11 @@ def main() -> int:
                 stop_reason = "signal_received"
                 break
             if stop_file.exists():
-                stop_reason = "stop_file_present"
+                stop_reason = (
+                    "initial_stop_file_present"
+                    if initial_stop_file_present and total_iterations == 0
+                    else "stop_file_present"
+                )
                 break
             if args.max_batches > 0 and batch_number > args.max_batches:
                 stop_reason = "max_batches_reached"
@@ -335,7 +340,10 @@ def main() -> int:
                     return_code != 0
                     and consecutive_failures >= args.max_consecutive_failures
                 ):
-                    stop_reason = "max_consecutive_failures_reached"
+                    if timed_out:
+                        stop_reason = "command_timeout"
+                    else:
+                        stop_reason = "max_consecutive_failures_reached"
                     break
 
                 has_follow_up_iteration = (
@@ -402,7 +410,12 @@ def main() -> int:
     print(f"total_iterations={total_iterations}")
     print(f"state_file={state_file}")
     print(f"log_file={log_file}")
-    if final_state["stop_reason"] in {"max_consecutive_failures_reached", "internal_error"}:
+    if final_state["stop_reason"] in {
+        "command_timeout",
+        "initial_stop_file_present",
+        "max_consecutive_failures_reached",
+        "internal_error",
+    }:
         return 1
     return 0
 

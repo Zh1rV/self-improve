@@ -49,7 +49,7 @@ def main() -> int:
         raise SystemExit("iteration must be > 0")
 
     objective = sanitize(args.objective)
-    stop_reason = sanitize(args.stop_reason)
+    stop_reason = sanitize(args.stop_reason).strip("`").upper()
     if stop_reason:
         try:
             valid_codes = load_stop_reason_codes(DEFAULT_STOP_REASONS)
